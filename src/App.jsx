@@ -3,41 +3,39 @@ import './App.css'
 
 const CAT_ENDPOINT_RANDOM_FACT = 'https://catfact.ninja/fact'
 
-export function App () {
-  const [fact, setFact] = useState()
-  const [imageUrl, setImageUrl] = useState()
+export function App() {
+  // State
+  const [fact, setFact] = useState('')
+  const [imageUrl, setUrl] = useState('')
 
-  const updateFact = () => {
-    fetch(CAT_ENDPOINT_RANDOM_FACT)
-      .then(response => response.json())
-      .then(({ fact }) => {
-        setFact(fact)
-      })
-  }
-
+  // Cat Fact
   useEffect(() => {
-    updateFact()
+    fetch(CAT_ENDPOINT_RANDOM_FACT)
+      .then((res) => res.json())
+      .then((data) => setFact(data.fact))
   }, [])
 
+  // Cat Image
   useEffect(() => {
     if (!fact) return
+    const threeFirstWords = fact.split(' ').slice(0, 3).join(' ')
+    const newImageUrl = `https://cataas.com/cat/says/${threeFirstWords}?fontSize=50&fontColor=white`
 
-    const threeFirstWords = fact.split(' ', 3).join(' ')
-    const newUrl = encodeURI(`https://cataas.com/cat/says/${threeFirstWords}`)
-    setImageUrl(newUrl)
+    setUrl(newImageUrl)
   }, [fact])
 
-  const handleClick = () => {
-    updateFact()
-  }
-
+  // Render
   return (
     <main>
-      <h1>Kitty's app</h1>
-      <button onClick={handleClick}>New fact</button>
+      <h1>App de Gatitos</h1>
+      {fact && <p>{fact}</p>}
       <section>
-        {fact && <p className='fact'>{fact}</p>}
-        {imageUrl && <img src={imageUrl} alt={`Image extracted using the first three word of ${fact}`} />}
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={`Intento de poner imagen para ${fact}`}
+          />
+        )}
       </section>
     </main>
   )
