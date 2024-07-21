@@ -8,12 +8,15 @@ export function App() {
   const [fact, setFact] = useState('')
   const [imageUrl, setUrl] = useState('')
 
-  // Cat Fact
-  useEffect(() => {
+  // Utils
+  const getRandomFact = () => {
     fetch(CAT_ENDPOINT_RANDOM_FACT)
       .then((res) => res.json())
       .then((data) => setFact(data.fact))
-  }, [])
+  }
+
+  // Cat Fact
+  useEffect(getRandomFact, [])
 
   // Cat Image
   useEffect(() => {
@@ -24,10 +27,13 @@ export function App() {
     setUrl(newImageUrl)
   }, [fact])
 
+  const handleClick = () => getRandomFact()
+
   // Render
   return (
     <main>
       <h1>App de Gatitos</h1>
+      <button onClick={handleClick}>Get new fact</button>
       {fact && <p>{fact}</p>}
       <section>
         {imageUrl && (
