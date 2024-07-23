@@ -1,46 +1,30 @@
-import { useEffect, useState } from 'react'
-import { getRandomFact } from './services/facts'
+import { useCatFact } from './hooks/useCatFact'
+import { useCatImage } from './hooks/useCatImage'
 
 import './App.css'
 
 export function App() {
-  // State
-  const [fact, setFact] = useState('')
-  const [imageUrl, setUrl] = useState('')
+	// State
+	const { fact, refreshRandomFact } = useCatFact()
+	const { imageUrl } = useCatImage({ fact })
 
-  // Cat Fact
-  useEffect(() => {
-    getRandomFact().then((newFact) => setFact(newFact))
-  }, [])
+	// Handlers
+	const handleClick = () => refreshRandomFact()
 
-  // Cat Image
-  useEffect(() => {
-    if (!fact) return
-    const threeFirstWords = fact.split(' ').slice(0, 3).join(' ')
-    const newImageUrl = `https://cataas.com/cat/says/${threeFirstWords}?fontSize=50&fontColor=white`
-
-    setUrl(newImageUrl)
-  }, [fact])
-
-  const handleClick = async () => {
-    const newFact = await getRandomFact()
-    setFact(newFact)
-  }
-
-  // Render
-  return (
-    <main>
-      <h1>App de Gatitos</h1>
-      <button onClick={handleClick}>Get new fact</button>
-      {fact && <p>{fact}</p>}
-      <section>
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={`Intento de poner imagen para ${fact}`}
-          />
-        )}
-      </section>
-    </main>
-  )
+	// Render
+	return (
+		<main>
+			<h1>App de Gatitos</h1>
+			<button onClick={handleClick}>Get new fact</button>
+			{fact && <p>{fact}</p>}
+			<section>
+				{imageUrl && (
+					<img
+						src={imageUrl}
+						alt={`Intento de poner imagen para ${fact}`}
+					/>
+				)}
+			</section>
+		</main>
+	)
 }
